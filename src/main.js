@@ -22,10 +22,9 @@ export default async ({ req, res, log, error }) => {
     let requestBody;
     try {
       
-       requestBody = req.body ;
+       requestBody = JSON.parse(req.body);
+       log(`Total body: ${requestBody}`);
        
-       
-     
     } catch (parseError) {
       return res.json({
         error: "Invalid JSON body",
@@ -34,7 +33,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     const { userId } = requestBody;
-    log(`Total body: ${userId}`);
+    log(`Total userId: ${userId}`);
 
     if (!userId) {
       return res.json({
