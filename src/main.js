@@ -22,7 +22,11 @@ export default async ({ req, res, log, error }) => {
     const { userId } = req.body; // Aquí estamos extrayendo userId desde el body
 
     if (!userId) {
-      return res.status(400).json({ error: "userId is required" });
+      // Enviar una respuesta con el error si falta el userId
+      return res.json({
+        error: "userId is required",
+        status: 400
+      });
     }
 
     // Obtener los eventos del usuario
@@ -48,9 +52,11 @@ export default async ({ req, res, log, error }) => {
     });
 
   } catch (err) {
+    // Manejo de errores
     error("Error fetching events: " + err.message);
-    return res.status(500).json({
+    return res.json({
       error: err.message,
+      status: 500
     });
   }
 };
