@@ -21,9 +21,9 @@ export default async ({ req, res, log, error }) => {
     // Intentar parsear manualmente el body si no se está recibiendo como JSON
     let requestBody;
     try {
-      log(`Total body: ${req.body}`);
+      log(`Total body1: ${req.body}`);
       requestBody = JSON.parse(req.body);
-      log(`Total body: ${requestBody}`);
+      log(`Total body2: ${requestBody}`);
        
     } catch (parseError) {
       return res.json({
@@ -33,7 +33,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     const { userId } = requestBody;
-    log(`Total body: ${userId}`);
+    log(`Total body3: ${userId}`);
 
     if (!userId) {
       return res.json({
