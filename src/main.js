@@ -21,7 +21,7 @@ export default async ({ req, res, log, error }) => {
     // Intentar parsear manualmente el body si no se está recibiendo como JSON
     let requestBody;
     try {
-      log(`Total body: ${req.payload}`);
+      log(`Total body: ${req}`);
       requestBody = JSON.parse(req.payload); // req.payload contiene el body crudo
      
     } catch (parseError) {
