@@ -25,11 +25,11 @@ export default async ({ req, res, log, error }) => {
      // Obtener los eventos del usuario
      const userId = req.query.userId; // Suponemos que recibes el userId por query params
      const userEvents = await databases.listDocuments(DATABASE_ID, USER_EVENTS_COLLECTION_ID, [
-       sdk.Query.equal('userId', userId),
+       sdk.Query.equal('idUser', userId),
      ]);
  
      // Obtener una lista de IDs de eventos guardados por el usuario
-     const savedEventIds = userEvents.documents.map((doc) => doc.eventId);
+     const savedEventIds = userEvents.documents.map((doc) => doc.idEvent);
  
      // Obtener todos los eventos
      const events = await databases.listDocuments(DATABASE_ID, EVENTS_COLLECTION_ID);
