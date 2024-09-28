@@ -5,7 +5,7 @@ export default async ({ req, res, log, error }) => {
     .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
     .setKey(req.headers['x-appwrite-key'] ?? '');
-  
+
   const users = new Users(client);
   const databases = new Databases(client);
 
@@ -18,11 +18,20 @@ export default async ({ req, res, log, error }) => {
     const response = await users.list();
     log(`Total users: ${response.total}`);
 
-    // Obtener el userId desde el body de la solicitud
-    const { userId } = req.body; // Aquí estamos extrayendo userId desde el body
+    // Intentar parsear manualmente el body si no se está recibiendo como JSON
+    let requestBody;
+    try {
+      requestBody = JSON.parse(req.payload); // req.payload contiene el body crudo
+    } catch (parseError) {
+      return res.json({
+        error: "Invalid JSON body",
+        status: 400
+      });
+    }
+
+    const { userId } = requestBody;
 
     if (!userId) {
-      // Enviar una respuesta con el error si falta el userId
       return res.json({
         error: "userId is required",
         status: 400
@@ -43,7 +52,7 @@ export default async ({ req, res, log, error }) => {
     // Combinar la información: añade el campo isSaved a los eventos
     const eventsWithSavedStatus = events.documents.map((event) => ({
       ...event,
-      isSaved: savedEventIds.includes(event.$id), // Si el evento está guardado, marcarlo como isSaved
+      isSaved: savedEventIds.includes(event.$id),
     }));
 
     // Responder con los eventos y el estado isSaved
