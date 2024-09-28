@@ -21,16 +21,10 @@ export default async ({ req, res, log, error }) => {
     // Intentar parsear manualmente el body si no se está recibiendo como JSON
     let requestBody;
     try {
-      log(`Total body1: ${req.body}`);
-      // requestBody = JSON.parse(req.body);
 
-      const cleanBody = req.body.replace(/'/g, '"');
-      log(`Total body2: ${cleanBody}`);
-      // Parse the cleaned JSON string
-      requestBody = JSON.parse(cleanBody);
-      log(`Total body3: ${cleanBody}`);
+      // const cleanBody = req.body.replace(/'/g, '"');
+      requestBody = JSON.parse(req.body);
       
-       
     } catch (parseError) {
       return res.json({
         error: "Invalid JSON body",
@@ -39,7 +33,6 @@ export default async ({ req, res, log, error }) => {
     }
 
     const { userId } = requestBody;
-    log(`Total body4: ${userId}`);
 
     if (!userId) {
       return res.json({
