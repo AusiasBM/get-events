@@ -22,8 +22,14 @@ export default async ({ req, res, log, error }) => {
     let requestBody;
     try {
       log(`Total body1: ${req.body}`);
-      requestBody = JSON.parse(req.body);
-      log(`Total body2: ${requestBody}`);
+      // requestBody = JSON.parse(req.body);
+
+      const cleanBody = req.body.replace(/'/g, '"');
+      log(`Total body2: ${cleanBody}`);
+      // Parse the cleaned JSON string
+      requestBody = JSON.parse(cleanBody);
+      log(`Total body3: ${cleanBody}`);
+      
        
     } catch (parseError) {
       return res.json({
@@ -33,7 +39,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     const { userId } = requestBody;
-    log(`Total body3: ${userId}`);
+    log(`Total body4: ${userId}`);
 
     if (!userId) {
       return res.json({
