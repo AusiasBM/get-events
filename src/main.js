@@ -1,4 +1,4 @@
-import { Client, Users, Databases, Query } from 'node-appwrite';
+import { Client, Databases, Query } from 'node-appwrite';
 
 export default async ({ req, res, log, error }) => {
   const client = new Client()
@@ -6,7 +6,6 @@ export default async ({ req, res, log, error }) => {
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
     .setKey(req.headers['x-appwrite-key'] ?? '');
 
-  const users = new Users(client);
   const databases = new Databases(client);
 
   const EVENTS_COLLECTION_ID = '66ade7e80028ee7c4db5'; 
@@ -14,15 +13,8 @@ export default async ({ req, res, log, error }) => {
   const DATABASE_ID = '66ade7d7000a17124be2';
 
   try {
-    // Log total users as an example
-    //const response = await users.list();
-    //log(`Total users: ${response.total}`);
-
-    // Intentar parsear manualmente el body si no se está recibiendo como JSON
     let requestBody;
     try {
-
-      // const cleanBody = req.body.replace(/'/g, '"');
       requestBody = JSON.parse(req.body);
       log(requestBody);
       
