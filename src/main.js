@@ -56,7 +56,7 @@ export default async ({ req, res, log, error }) => {
 
       // Obtener las fallas
        fallasCollection = await databases.listDocuments(DATABASE_ID_USERS, FALLAS_COLLECTION_ID, [
-        Query.in('$id', fallasIds),
+        Query.equal('$id', fallasIds),
       ]);
     }
 
