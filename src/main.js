@@ -33,7 +33,7 @@ export default async ({ req, res, log, error }) => {
       });
     }
 
-    const { userId, fallasIds, onlySavedEvents } = requestBody;
+    const { userId, fallasIds, onlySavedEvents, offset, limit } = requestBody;
 
     var queryEventsCollection = [];
     var savedEventIds = [];
@@ -49,11 +49,19 @@ export default async ({ req, res, log, error }) => {
     }
 
     if (fallasIds) {
-      queryEventsCollection.push(Query.in('idFalla', fallasIds));
+      queryEventsCollection.push(Query.contains('idFalla', fallasIds));
     }
 
     if(onlySavedEvents === true && userId) {
-      queryEventsCollection.push(Query.in('$id', savedEventIds));
+      queryEventsCollection.push(Query.contains('$id', savedEventIds));
+    }
+
+    if (offset) {
+      queryEventsCollection.push(Query.offset(offset));
+    }
+
+    if (limit) {
+      queryEventsCollection.push(Query.limit(limit));
     }
 
     // Obtener todos los eventos o los eventos filtrados por fallas
