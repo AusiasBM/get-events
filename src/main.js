@@ -25,10 +25,14 @@ export default async ({ req, res, log, error }) => {
       });
     }
 
-    const { userId, fallasIds, onlySavedEvents, page } = requestBody;
+    const { userId, fallasIds, idsEvents, onlySavedEvents, page } = requestBody;
+
+    var twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
     var queryEventsCollection = [
-      Query.orderAsc('dateInit')
+      Query.orderAsc('dateInit'),
+      Query.greaterThan('dateInit', twoDaysAgo.toISOString()),
     ];
     var savedEventIds = [];
 
@@ -46,6 +50,11 @@ export default async ({ req, res, log, error }) => {
     if (fallasIds) {
       log("Fallas IDs: " + fallasIds);
       queryEventsCollection.push(Query.equal('idFalla', fallasIds));
+    }
+
+    if (idsEvents) {
+      log("IDs Events: " + idsEvents);
+      queryEventsCollection.push(Query.in('$id', idsEvents));
     }
 
     if(onlySavedEvents === true && userId) {
