@@ -95,7 +95,7 @@ export default async ({ req, res, log, error }) => {
     const eventsWithSavedStatus = events.documents.map((event) => ({
       ...event,
       isSaved: savedEventIds.includes(event.$id),
-      falla: fallasCollection.find((falla) => falla.$id === event.idFalla),
+      falla: fallasCollection.documents.find((falla) => falla.$id === event.idFalla),
     }));
 
     // Responder con los eventos y el estado isSaved
