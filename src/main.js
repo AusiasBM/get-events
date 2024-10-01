@@ -85,7 +85,7 @@ export default async ({ req, res, log, error }) => {
 
     if(fallasCollection.length === 0) {
       fallasCollection = await databases.listDocuments(DATABASE_ID_USERS, FALLAS_COLLECTION_ID, [
-        Query.in('$id', events.documents.map((event) => event.idFalla)),
+        Query.equal('$id', events.documents.map((event) => event.idFalla)),
       ]);
     }
 
