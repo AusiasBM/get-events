@@ -33,7 +33,7 @@ export default async ({ req, res, log, error }) => {
       });
     }
 
-    const { userId, fallasIds, onlySavedEvents, offset, limit } = requestBody;
+    const { userId, fallasIds, onlySavedEvents, page } = requestBody;
 
     var queryEventsCollection = [
       Query.orderAsc('dateInit')
@@ -58,13 +58,14 @@ export default async ({ req, res, log, error }) => {
       queryEventsCollection.push(Query.equal('$id', savedEventIds));
     }
 
-    if (offset) {
+    if (page) {
+      const limit = 25;
+      const offset = (page - 1) * limit;
+      queryEventsCollection.push(Query.limit(limit));
       queryEventsCollection.push(Query.offset(offset));
     }
 
-    if (limit) {
-      queryEventsCollection.push(Query.limit(limit));
-    }
+    log(queryEventsCollection);
 
     // Obtener todos los eventos o los eventos filtrados por fallas
     const events = await databases.listDocuments(DATABASE_ID, EVENTS_COLLECTION_ID, queryEventsCollection);
