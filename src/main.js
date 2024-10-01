@@ -35,7 +35,9 @@ export default async ({ req, res, log, error }) => {
 
     const { userId, fallasIds, onlySavedEvents, offset, limit } = requestBody;
 
-    var queryEventsCollection = [];
+    var queryEventsCollection = [
+      Query.orderAsc('dateInit')
+    ];
     var savedEventIds = [];
 
     if (userId) {
@@ -49,11 +51,11 @@ export default async ({ req, res, log, error }) => {
     }
 
     if (fallasIds) {
-      queryEventsCollection.push(Query.contains('idFalla', fallasIds));
+      queryEventsCollection.push(Query.equal('idFalla', fallasIds));
     }
 
     if(onlySavedEvents === true && userId) {
-      queryEventsCollection.push(Query.contains('$id', savedEventIds));
+      queryEventsCollection.push(Query.equal('$id', savedEventIds));
     }
 
     if (offset) {
