@@ -41,7 +41,8 @@ export default async ({ req, res, log, error }) => {
     var savedEventIds = [];
 
     if (userId) {
-      // Obtener los eventos del usuario
+      log("User ID: " + userId);
+      // Obtener los ids de los eventos guardados del usuario
       const userEvents = await databases.listDocuments(DATABASE_ID, USER_EVENTS_COLLECTION_ID, [
         Query.equal('idUser', userId),
       ]);
@@ -51,14 +52,17 @@ export default async ({ req, res, log, error }) => {
     }
 
     if (fallasIds) {
+      log("Fallas IDs: " + fallasIds);
       queryEventsCollection.push(Query.equal('idFalla', fallasIds));
     }
 
     if(onlySavedEvents === true && userId) {
+      log("Only saved events");
       queryEventsCollection.push(Query.equal('$id', savedEventIds));
     }
 
     if (page) {
+      log("Page: " + page);
       const limit = 25;
       const offset = (page - 1) * limit;
       queryEventsCollection.push(Query.limit(limit));
