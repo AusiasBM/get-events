@@ -15,8 +15,8 @@ export default async ({ req, res, log, error }) => {
 
   try {
     // Log total users as an example
-    const response = await users.list();
-    log(`Total users: ${response.total}`);
+    //const response = await users.list();
+    //log(`Total users: ${response.total}`);
 
     // Intentar parsear manualmente el body si no se está recibiendo como JSON
     let requestBody;
@@ -24,7 +24,7 @@ export default async ({ req, res, log, error }) => {
 
       // const cleanBody = req.body.replace(/'/g, '"');
       requestBody = JSON.parse(req.body);
-      print(requestBody);
+      log(requestBody);
       
     } catch (parseError) {
       return res.json({
