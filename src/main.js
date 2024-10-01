@@ -89,11 +89,13 @@ export default async ({ req, res, log, error }) => {
       ]);
     }
 
+    log("fallas colection: " + fallasCollection);
+
     // Combinar la información: añade el campo isSaved a los eventos
     const eventsWithSavedStatus = events.documents.map((event) => ({
       ...event,
       isSaved: savedEventIds.includes(event.$id),
-      falla: fallasCollection.filter((falla) => falla.$id === event.idFalla),
+      falla: fallasCollection.find((falla) => falla.$id === event.idFalla),
     }));
 
     // Responder con los eventos y el estado isSaved
