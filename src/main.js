@@ -24,6 +24,7 @@ export default async ({ req, res, log, error }) => {
 
       // const cleanBody = req.body.replace(/'/g, '"');
       requestBody = JSON.parse(req.body);
+      print(requestBody);
       
     } catch (parseError) {
       return res.json({
@@ -51,7 +52,7 @@ export default async ({ req, res, log, error }) => {
       queryEventsCollection.push(Query.in('idFalla', fallasIds));
     }
 
-    if(onlySavedEvents && userId) {
+    if(onlySavedEvents === true && userId) {
       queryEventsCollection.push(Query.in('$id', savedEventIds));
     }
 
@@ -78,3 +79,9 @@ export default async ({ req, res, log, error }) => {
     });
   }
 };
+
+
+
+{
+  "body": "{\"userId\": \"66d0906f18fc0138c1b5\"}"
+}
