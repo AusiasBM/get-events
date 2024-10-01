@@ -10,7 +10,9 @@ export default async ({ req, res, log, error }) => {
 
   const EVENTS_COLLECTION_ID = '66ade7e80028ee7c4db5'; 
   const USER_EVENTS_COLLECTION_ID = '66ade802001fe44176cd'; 
-  const DATABASE_ID = '66ade7d7000a17124be2';
+  const FALLAS_COLLECTION_ID = '66adebbb000ff7ddc17d';
+  const DATABASE_ID_EVENTS = '66ade7d7000a17124be2';
+  const DATABASE_ID_USERS = '66ade7cd003d74b23c99';
 
   try {
     let requestBody;
@@ -35,11 +37,12 @@ export default async ({ req, res, log, error }) => {
       Query.greaterThan('dateInit', twoDaysAgo.toISOString()),
     ];
     var savedEventIds = [];
+    var fallasCollection = [];
 
     if (userId) {
       log("User ID: " + userId);
       // Obtener los ids de los eventos guardados del usuario
-      const userEvents = await databases.listDocuments(DATABASE_ID, USER_EVENTS_COLLECTION_ID, [
+      const userEvents = await databases.listDocuments(DATABASE_ID_EVENTS, USER_EVENTS_COLLECTION_ID, [
         Query.equal('idUser', userId),
       ]);
 
@@ -50,6 +53,11 @@ export default async ({ req, res, log, error }) => {
     if (fallasIds) {
       log("Fallas IDs: " + fallasIds);
       queryEventsCollection.push(Query.equal('idFalla', fallasIds));
+
+      // Obtener las fallas
+       fallasCollection = await databases.listDocuments(DATABASE_ID_USERS, FALLAS_COLLECTION_ID, [
+        Query.in('$id', fallasIds),
+      ]);
     }
 
     if (idsEvents) {
@@ -73,12 +81,19 @@ export default async ({ req, res, log, error }) => {
     log(queryEventsCollection);
 
     // Obtener todos los eventos o los eventos filtrados por fallas
-    const events = await databases.listDocuments(DATABASE_ID, EVENTS_COLLECTION_ID, queryEventsCollection);
+    const events = await databases.listDocuments(DATABASE_ID_EVENTS, EVENTS_COLLECTION_ID, queryEventsCollection);
+
+    if(fallasCollection.length === 0) {
+      fallasCollection = await databases.listDocuments(DATABASE_ID_USERS, FALLAS_COLLECTION_ID, [
+        Query.in('$id', events.documents.map((event) => event.idFalla)),
+      ]);
+    }
 
     // Combinar la información: añade el campo isSaved a los eventos
     const eventsWithSavedStatus = events.documents.map((event) => ({
       ...event,
       isSaved: savedEventIds.includes(event.$id),
+      falla: fallasCollection.find((falla) => falla.$id === event.idFalla),
     }));
 
     // Responder con los eventos y el estado isSaved
