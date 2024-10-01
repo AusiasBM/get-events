@@ -79,9 +79,3 @@ export default async ({ req, res, log, error }) => {
     });
   }
 };
-
-
-
-{
-  "body": "{\"userId\": \"66d0906f18fc0138c1b5\"}"
-}
