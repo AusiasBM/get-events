@@ -32,25 +32,31 @@ export default async ({ req, res, log, error }) => {
       });
     }
 
-    const { userId } = requestBody;
+    const { userId, fallasIds, onlySavedEvents } = requestBody;
 
-    if (!userId) {
-      return res.json({
-        error: "userId is required",
-        status: 400
-      });
+    var queryEventsCollection = [];
+    var savedEventIds = [];
+
+    if (userId) {
+      // Obtener los eventos del usuario
+      const userEvents = await databases.listDocuments(DATABASE_ID, USER_EVENTS_COLLECTION_ID, [
+        Query.equal('idUser', userId),
+      ]);
+
+      // Obtener una lista de IDs de eventos guardados por el usuario
+      savedEventIds = userEvents.documents.map((doc) => doc.idEvent);
     }
 
-    // Obtener los eventos del usuario
-    const userEvents = await databases.listDocuments(DATABASE_ID, USER_EVENTS_COLLECTION_ID, [
-      Query.equal('idUser', userId),
-    ]);
+    if (fallasIds) {
+      queryEventsCollection.push(Query.in('idFalla', fallasIds));
+    }
 
-    // Obtener una lista de IDs de eventos guardados por el usuario
-    const savedEventIds = userEvents.documents.map((doc) => doc.idEvent);
+    if(onlySavedEvents && userId) {
+      queryEventsCollection.push(Query.in('$id', savedEventIds));
+    }
 
-    // Obtener todos los eventos
-    const events = await databases.listDocuments(DATABASE_ID, EVENTS_COLLECTION_ID);
+    // Obtener todos los eventos o los eventos filtrados por fallas
+    const events = await databases.listDocuments(DATABASE_ID, EVENTS_COLLECTION_ID, queryEventsCollection);
 
     // Combinar la información: añade el campo isSaved a los eventos
     const eventsWithSavedStatus = events.documents.map((event) => ({
