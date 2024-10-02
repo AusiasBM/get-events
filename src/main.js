@@ -97,7 +97,7 @@ export default async ({ req, res, log, error }) => {
       return {
         ...event,
         isSaved: savedEventIds.includes(event.$id),
-        urlImageFalla: fallaEvent.urlImage,
+        urlImageFalla: fallaEvent.imageUrl,
         nameFalla: fallaEvent.name,
       };
     });
