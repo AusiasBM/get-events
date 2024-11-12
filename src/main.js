@@ -62,7 +62,7 @@ export default async ({ req, res, log, error }) => {
 
     if (idsEvents) {
       log("IDs Events: " + idsEvents);
-      queryEventsCollection.push(Query.in('$id', idsEvents));
+      queryEventsCollection.push(Query.equal('$id', idsEvents));
     }
 
     if(onlySavedEvents === true && userId) {
