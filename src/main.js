@@ -2,17 +2,17 @@ import { Client, Databases, Query } from 'node-appwrite';
 
 export default async ({ req, res, log, error }) => {
   const client = new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT_S)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
     .setKey(req.headers['x-appwrite-key'] ?? '');
 
   const databases = new Databases(client);
 
-  const EVENTS_COLLECTION_ID = '66ade7e80028ee7c4db5'; 
-  const USER_EVENTS_COLLECTION_ID = '66ade802001fe44176cd'; 
-  const FALLAS_COLLECTION_ID = '66adebbb000ff7ddc17d';
-  const DATABASE_ID_EVENTS = '66ade7d7000a17124be2';
-  const DATABASE_ID_USERS = '66ade7cd003d74b23c99';
+  const EVENTS_COLLECTION_ID = process.env.EVENTS_COLLECTION_ID; 
+  const USER_EVENTS_COLLECTION_ID = process.env.USER_EVENTS_COLLECTION_ID; 
+  const FALLAS_COLLECTION_ID = process.env.FALLAS_COLLECTION_ID;
+  const DATABASE_ID_EVENTS = process.env.DATABASE_ID_EVENTS;
+  const DATABASE_ID_USERS = process.env.DATABASE_ID_USERS;
 
   try {
     let requestBody;
@@ -45,6 +45,8 @@ export default async ({ req, res, log, error }) => {
       const userEvents = await databases.listDocuments(DATABASE_ID_EVENTS, USER_EVENTS_COLLECTION_ID, [
         Query.equal('idUser', userId),
       ]);
+
+      log("User Events: " + userEvents);
 
       // Obtener una lista de IDs de eventos guardados por el usuario
       savedEventIds = userEvents.documents.map((doc) => doc.idEvent);
