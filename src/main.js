@@ -42,23 +42,19 @@ export default async ({ req, res, log, error }) => {
     if (userId) {
       log("User ID: " + userId);
       // Obtener los ids de los eventos guardados del usuario
-      let userEvents = [];
+      let userEvents;
       try {
-        log("Database ID Events: " + DATABASE_ID_EVENTS);
-        log("User Events Collection ID: " + USER_EVENTS_COLLECTION_ID);
-
         userEvents = await databases.listDocuments(DATABASE_ID_EVENTS, USER_EVENTS_COLLECTION_ID, [
           Query.equal('idUser', userId),
         ]);
-        log("1.User Events: " + userEvents);
       } catch (error) {
         log("Error fetching user events: " + error.message);
       }
 
-      log("2.User Events: " + userEvents);
+      log("User Events: " + userEvents);
 
       // Obtener una lista de IDs de eventos guardados por el usuario
-      if( userEvents.length > 0 && userEvents.documents.length > 0) {
+      if( userEvents && userEvents.documents.length > 0) {
         savedEventIds = userEvents.documents.map((doc) => doc.idEvent);
       }
     }
