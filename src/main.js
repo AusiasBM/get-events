@@ -55,7 +55,7 @@ export default async ({ req, res, log, error }) => {
       log("2.User Events: " + userEvents);
 
       // Obtener una lista de IDs de eventos guardados por el usuario
-      if( userEvents && userEvents.documents.length > 0) {
+      if( userEvents.length > 0 && userEvents.documents.length > 0) {
         savedEventIds = userEvents.documents.map((doc) => doc.idEvent);
       }
     }
