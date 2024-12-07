@@ -112,6 +112,7 @@ export default async ({ req, res, log, error }) => {
   } catch (err) {
     // Manejo de errores
     error("Error fetching events: " + err.message);
+    error("Error fetching events: " + err);
     return res.json({
       error: err.message,
       status: 500
