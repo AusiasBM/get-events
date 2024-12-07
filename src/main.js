@@ -44,6 +44,9 @@ export default async ({ req, res, log, error }) => {
       // Obtener los ids de los eventos guardados del usuario
       let userEvents = [];
       try {
+        log("Database ID Events: " + DATABASE_ID_EVENTS);
+        log("User Events Collection ID: " + USER_EVENTS_COLLECTION_ID);
+
         userEvents = await databases.listDocuments(DATABASE_ID_EVENTS, USER_EVENTS_COLLECTION_ID, [
           Query.equal('idUser', userId),
         ]);
