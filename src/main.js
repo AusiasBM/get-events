@@ -42,16 +42,17 @@ export default async ({ req, res, log, error }) => {
     if (userId) {
       log("User ID: " + userId);
       // Obtener los ids de los eventos guardados del usuario
-      let userEvents;
+      let userEvents = [];
       try {
         userEvents = await databases.listDocuments(DATABASE_ID_EVENTS, USER_EVENTS_COLLECTION_ID, [
           Query.equal('idUser', userId),
         ]);
+        log("1.User Events: " + userEvents);
       } catch (error) {
         log("Error fetching user events: " + error.message);
       }
 
-      log("User Events: " + userEvents);
+      log("2.User Events: " + userEvents);
 
       // Obtener una lista de IDs de eventos guardados por el usuario
       if( userEvents && userEvents.documents.length > 0) {
