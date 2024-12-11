@@ -8,6 +8,7 @@ export default async ({ req, res, log, error }) => {
 
   const databases = new Databases(client);
 
+  // Variables de entorno
   const EVENTS_COLLECTION_ID = process.env.EVENTS_COLLECTION_ID; 
   const USER_EVENTS_COLLECTION_ID = process.env.USER_EVENTS_COLLECTION_ID; 
   const FALLAS_COLLECTION_ID = process.env.FALLAS_COLLECTION_ID;
@@ -39,7 +40,8 @@ export default async ({ req, res, log, error }) => {
     var savedEventIds = [];
     var fallasCollection = [];
 
-    if (userId) {
+    // Si el usuario está autenticado, obtener los eventos guardados por el usuario
+    if (userId && userId !== "") {
       log("User ID: " + userId);
       // Obtener los ids de los eventos guardados del usuario
       let userEvents;
@@ -58,8 +60,10 @@ export default async ({ req, res, log, error }) => {
         savedEventIds = userEvents.documents.map((doc) => doc.idEvent);
       }
     }
+    // ******************************************************************************
 
-    if (fallasIds) {
+    // Si se proporcionan los IDs de las fallas, obtener las fallas
+    if (fallasIds && fallasIds.length > 0) {
       log("Fallas IDs: " + fallasIds);
       queryEventsCollection.push(Query.equal('idFalla', fallasIds));
 
@@ -68,22 +72,28 @@ export default async ({ req, res, log, error }) => {
         Query.equal('$id', fallasIds),
       ]);
     }
+    // ******************************************************************************
 
-    if (idsEvents) {
+    // Si se proporcionan los IDs de los eventos, obtener los eventos
+    if (idsEvents && idsEvents.length > 0) {
       log("IDs Events: " + idsEvents);
       queryEventsCollection.push(Query.equal('$id', idsEvents));
     }
+    // ******************************************************************************
 
-    if(onlySavedEvents === true && userId) {
+    // Si se solicitan solo los eventos guardados, añadir el filtro de los eventos guardados
+    if(onlySavedEvents && onlySavedEvents === true && userId && userId !== "") {
       log("Only saved events");
       queryEventsCollection.push(Query.equal('$id', savedEventIds));
     }
+    // ******************************************************************************
 
+    // Si se proporciona el número de página, calcular el offset
     if (page) {
       log("Page: " + page);
       const limit = 25;
       const offset = (page - 1) * limit;
-      queryEventsCollection.push(Query.limit(limit));
+      //queryEventsCollection.push(Query.limit(limit));
       queryEventsCollection.push(Query.offset(offset));
     }
 
