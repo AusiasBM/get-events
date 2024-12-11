@@ -94,7 +94,7 @@ export default async ({ req, res, log, error }) => {
       const limit = 25;
       const offset = (page - 1) * limit;
       //queryEventsCollection.push(Query.limit(limit));
-      queryEventsCollection.push(Query.offset(offset));
+      //queryEventsCollection.push(Query.offset(offset));
     }
 
     log(queryEventsCollection);
