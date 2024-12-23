@@ -48,6 +48,7 @@ export default async ({ req, res, log, error }) => {
       try {
         userEvents = await databases.listDocuments(DATABASE_ID_EVENTS, USER_EVENTS_COLLECTION_ID, [
           Query.equal('idUser', userId),
+          Query.limit(150),
         ]);
       } catch (error) {
         log("Error fetching user events: " + error.message);
@@ -91,9 +92,9 @@ export default async ({ req, res, log, error }) => {
     // Si se proporciona el número de página, calcular el offset
     if (page) {
       log("Page: " + page);
-      const limit = 25;
+      const limit = 150;
       const offset = (page - 1) * limit;
-      //queryEventsCollection.push(Query.limit(limit));
+      queryEventsCollection.push(Query.limit(limit));
       //queryEventsCollection.push(Query.offset(offset));
     }
 
