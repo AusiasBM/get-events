@@ -36,6 +36,7 @@ export default async ({ req, res, log, error }) => {
     var queryEventsCollection = [
       Query.orderAsc('dateInit'),
       Query.greaterThan('dateInit', twoDaysAgo.toISOString()),
+      Query.limit(150),
     ];
     var savedEventIds = [];
     var fallasCollection = [];
@@ -92,9 +93,9 @@ export default async ({ req, res, log, error }) => {
     // Si se proporciona el número de página, calcular el offset
     if (page) {
       log("Page: " + page);
-      const limit = 150;
-      const offset = (page - 1) * limit;
-      queryEventsCollection.push(Query.limit(limit));
+      //const limit = 150;
+      //const offset = (page - 1) * limit;
+      //queryEventsCollection.push(Query.limit(limit));
       //queryEventsCollection.push(Query.offset(offset));
     }
 
